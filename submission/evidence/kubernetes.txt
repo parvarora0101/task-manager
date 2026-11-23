@@ -1,0 +1,14 @@
+Kubernetes run evidence (secret values intentionally omitted)
+Context: kind-task-lab
+Node: task-lab-control-plane Ready, arm64
+Deployments: task-blue and task-green each reached 1/1 Ready
+Services: task-manager and task-preview on port 3000
+ConfigMap: task-settings present
+Secret: task-secrets Opaque, key name token; value not displayed
+PVC: task-data Bound, 1Gi, standard StorageClass
+Readiness probe: /health/ready
+Liveness probe: /health/live
+Observer RBAC: get pods=yes; get pods/log=yes; get secrets=no
+Persistence verifier: generated task returned HTTP 200 after blue scaled to two replicas and restarted
+Rolling update mechanics: task-manager:v2 (same image bits) succeeded; rollout undo restored task-manager:local
+Final blue replica count: 1
