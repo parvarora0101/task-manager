@@ -27,3 +27,17 @@ TASK [Build current image] *****************************************************
 changed: [localhost]
 
 TASK [Load the image into kind] ************************************************
+changed: [localhost]
+
+TASK [Apply application configuration] *****************************************
+changed: [localhost]
+
+TASK [Restart to pick up the loaded lab tag] ***********************************
+changed: [localhost]
+
+TASK [Wait for the two slots] **************************************************
+ok: [localhost] => (item=blue)
+ok: [localhost] => (item=green)
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0

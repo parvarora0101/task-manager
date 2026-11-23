@@ -1,0 +1,15 @@
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/collector-6c76bc87f4-t2k74   1/1     Running   0          2m1s
+pod/fluentd-96zrn                1/1     Running   0          2m1s
+
+NAME                            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/archive   Bound    pvc-537ec72f-c6c1-4b86-8303-6c48928c7e47   2Gi        RWO            standard       <unset>                 2m1s
+19
+6
+27
+2
+Fresh application traffic verification:
+- Generated five GET /health/ready requests through the task-manager Service.
+- Counted 79 archived task-blue container log records across /archive/containers*.
+- Counted 37 archived kube-system records across /archive/containers*.
+- Only counts and filenames were recorded; log lines and credentials were not printed.

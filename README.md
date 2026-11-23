@@ -6,7 +6,7 @@ Task Manager is a private, per-account task board. Users register and sign in, c
 
 ## Run on your computer
 
-Extract the ZIP and open the `task-manager` folder in VS Code. Install Node.js 24, then run:
+Open the source checkout in VS Code. Install Node.js 24, then run:
 
 ```sh
 npm test
@@ -38,11 +38,25 @@ Both runs use port 3000, so stop the first before starting the second. Compose s
 | `k8s/` | Blue and green Deployments, Services, ConfigMap, PVC, probes and read-only observer Role |
 | `ops/` | Ansible, Terraform, Argo CD, monitoring, logging and backup |
 | [Deployment runbook](docs/RUNBOOK.md) | Configuration, GitHub and Jenkins setup, blue-green release and rollback |
-| [Technical report](docs/REPORT.md) | Architecture diagram, design decisions, verification and remaining lab evidence |
-| [Demo script](docs/DEMO.md) | Timed ten-minute presentation and twelve-minute recording script |
-| [Evidence index](docs/EVIDENCE.md) | Rubric mapping to commands and verified or remaining results |
+| [Technical report](submission/technical-report.pdf) | Architecture diagram, design decisions, verification and remaining lab evidence |
+| [Demo script](submission/recording-script.md) | Timed ten-minute presentation and twelve-minute recording script |
+| [Evidence index](submission/EVIDENCE.md) | Rubric mapping to commands and verified or remaining results |
 
 The provided folder may be an extracted source tree without Git metadata. Run `git init -b main` only when you are ready to create local history, then add an authorized private GitHub remote. No remote URL or hosted CI result is implied by this source copy.
+
+## Apple Silicon kind deployment
+
+Install Docker Desktop, Node.js 24, kind, kubectl, Terraform and Ansible. Start Docker Desktop. Reuse the existing `task-lab` cluster when it is present. For a fresh setup:
+
+```sh
+terraform -chdir=ops/terraform init
+terraform -chdir=ops/terraform plan -out=lab.plan
+terraform -chdir=ops/terraform apply lab.plan
+ansible-playbook -i localhost, ops/ansible/workstation.yml
+kubectl --context kind-task-lab -n task-manager get deploy,pods,svc,pvc
+```
+
+Use the [runbook](docs/RUNBOOK.md) to verify rollouts, install observability and connect GitOps. The [standalone architecture diagram](submission/architecture.pdf) shows the app and delivery paths.
 
 ## REST API
 

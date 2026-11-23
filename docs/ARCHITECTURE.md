@@ -23,9 +23,9 @@ flowchart LR
   Blue -->|/metrics · bearer token| Prom[Prometheus\nnot installed]
   Green -->|/metrics · bearer token| Prom
   Prom --> Grafana[Grafana\nnot installed]
-  Blue -->|container stdout/stderr| Fluentd[Fluentd agent and collector\nnot applied]
+  Blue -->|container stdout/stderr| Fluentd[Fluentd agent and collector\nverified]
   Green -->|container stdout/stderr| Fluentd
-  Fluentd --> Archive[(Persistent log archive\nnot provisioned)]
+  Fluentd --> Archive[(Persistent log archive\n2 GiB PVC · verified)]
 ```
 
 ## Traffic and persistence
@@ -34,4 +34,4 @@ The live Service selects `slot: blue`; the preview Service selects `slot: green`
 
 ## Evidence boundary
 
-Solid topology labels marked verified were inspected against the running local cluster. Integrations explicitly marked “not connected,” “not installed,” or “not applied” are design intent only. See [EVIDENCE.md](EVIDENCE.md) for the rubric mapping.
+Solid topology labels marked verified were inspected against the running local cluster. Integrations explicitly marked “not connected” or “not installed” are design intent only. See [EVIDENCE.md](EVIDENCE.md) for the rubric mapping.

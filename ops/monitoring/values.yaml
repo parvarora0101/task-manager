@@ -1,10 +1,14 @@
+alertmanager:
+  enabled: false
+nodeExporter:
+  enabled: false
+prometheusOperator:
+  admissionWebhooks:
+    enabled: false
 prometheus:
   prometheusSpec:
     retention: 2d
     serviceMonitorSelectorNilUsesHelmValues: false
-    serviceMonitorNamespaceSelector:
-      matchLabels:
-        kubernetes.io/metadata.name: task-manager
 grafana:
   service:
     type: ClusterIP

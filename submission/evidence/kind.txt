@@ -1,0 +1,112 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 373B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24-bookworm-slim
+#2 DONE 2.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 108B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#4 resolve docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 24.79kB done
+#5 DONE 0.0s
+
+#6 [2/6] WORKDIR /app
+#6 CACHED
+
+#7 [3/6] RUN install -d -o node -g node -m 0750 /data
+#7 CACHED
+
+#8 [4/6] COPY --chown=node:node package.json server.js ./
+#8 CACHED
+
+#9 [5/6] COPY --chown=node:node public/ public/
+#9 DONE 0.0s
+
+#10 [6/6] COPY --chown=node:node ops/backup.js ops/backup.js
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers 0.0s done
+#11 exporting manifest sha256:97791434075c0713cdef57133bca7dfb8e1c2cfe93ffe5d45f3a60f717a02362 done
+#11 exporting config sha256:bdf21b759f9baadade3525d5d49917d116f9623fed06cefd2ff651c92d0ae32c done
+#11 exporting attestation manifest sha256:e03956d298a3cd9ccf26da4fa024e19d339a1c0e76b71957eec99546e1a17816 done
+#11 exporting manifest list sha256:c6a748de79c4861a4b1f44b93d19f712d16054fc269c2c0d871f0439791a2493 done
+#11 naming to docker.io/library/task-manager:lab-v2 done
+#11 unpacking to docker.io/library/task-manager:lab-v2 0.0s done
+#11 DONE 0.1s
+linux/arm64
+Image: "task-manager:lab-v2" with ID "sha256:c6a748de79c4861a4b1f44b93d19f712d16054fc269c2c0d871f0439791a2493" not yet present on node "task-lab-control-plane", loading...
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/task-blue    1/1     1            1           9m35s
+deployment.apps/task-green   1/1     1            1           9m35s
+
+NAME                              READY   STATUS    RESTARTS   AGE
+pod/task-blue-75577b9954-jcl9n    1/1     Running   0          50s
+pod/task-green-64b96bd5ff-tdjcv   1/1     Running   0          50s
+
+NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/task-manager   ClusterIP   10.96.9.93     <none>        3000/TCP   9m35s
+service/task-preview   ClusterIP   10.96.252.46   <none>        3000/TCP   9m35s
+
+NAME                         DATA   AGE
+configmap/kube-root-ca.crt   1      9m40s
+configmap/task-settings      1      9m35s
+
+NAME                              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/task-data   Bound    pvc-96da58dd-0c5d-4d68-9999-484ddd6fce53   1Gi        RWO            standard       <unset>                 9m35s
+NAME           TYPE
+task-secrets   Opaque
+NAME         CONFIG          SECRET         READY           LIVE           CLAIM
+task-blue    task-settings   task-secrets   /health/ready   /health/live   task-data
+task-green   task-settings   task-secrets   /health/ready   /health/live   task-data
+Created an isolated verification account and task without printing credentials.
+Scaled the blue deployment to 2 replicas, restarted it, and completed rollout.
+Logged in again and read the same task after the restart: HTTP 200.
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+task-blue   2/2     2            2           9m39s
+deployment.apps/task-blue image updated
+Waiting for deployment "task-blue" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "task-blue" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "task-blue" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "task-blue" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "task-blue" rollout to finish: 1 old replicas are pending termination...
+deployment "task-blue" successfully rolled out
+NAME        IMAGE
+task-blue   task-manager:lab-v2
+deployment.apps/task-blue
+REVISION  CHANGE-CAUSE
+6         <none>
+7         <none>
+8         <none>
+9         <none>
+10        <none>
+
+Warning: resource deployments/task-blue was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/task-blue rolled back
+Waiting for deployment "task-blue" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "task-blue" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "task-blue" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "task-blue" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "task-blue" rollout to finish: 1 old replicas are pending termination...
+deployment "task-blue" successfully rolled out
+deployment.apps/task-blue scaled
+Waiting for deployment "task-blue" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "task-blue" rollout to finish: 1 old replicas are pending termination...
+deployment "task-blue" successfully rolled out
+NAME         IMAGE                READY
+task-blue    task-manager:local   1
+task-green   task-manager:local   1
+rolebinding.rbac.authorization.k8s.io/task-observer-demo configured
+yes
+yes
+no
+no

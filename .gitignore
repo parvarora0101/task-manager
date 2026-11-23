@@ -6,3 +6,5 @@ node_modules/
 *.tfvars
 *.plan
 ansible.retry
+
+.capstone-draft/

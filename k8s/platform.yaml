@@ -27,6 +27,7 @@ metadata:
   name: task-manager
   labels:
     app: task-manager
+    metrics: task-manager
 spec:
   selector:
     app: task-manager

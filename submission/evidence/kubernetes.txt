@@ -10,5 +10,6 @@ Readiness probe: /health/ready
 Liveness probe: /health/live
 Observer RBAC: get pods=yes; get pods/log=yes; get secrets=no
 Persistence verifier: generated task returned HTTP 200 after blue scaled to two replicas and restarted
-Rolling update mechanics: task-manager:v2 (same image bits) succeeded; rollout undo restored task-manager:local
+Distinct ARM64 image task-manager:lab-v2 changed page title, rolled out to blue, then rollout undo restored task-manager:local
+Post-rollback live Service: readiness HTTP 200; page title Task Manager
 Final blue replica count: 1

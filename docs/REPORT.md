@@ -42,15 +42,17 @@ Docker Compose built and started the image. Its readiness endpoint returned HTTP
 
 The existing kind cluster was reachable on ARM64. Terraform validated, applied an idempotent cluster declaration, and then produced a no-change plan. The Ansible workstation play completed with six successful tasks and no failures. Both blue and green Pods became Ready. The Task Manager and preview Services, settings ConfigMap, Opaque `task-secrets` reference, `task-data` PVC, readiness probe and observer Role were present. The PVC was Bound at 1 GiB.
 
-The Service readiness endpoint returned HTTP 200 through port forwarding. A generated disposable account and task survived scaling blue to two replicas and restarting the deployment; the verifier reconnected to the Service after the rollout and retrieved the task with HTTP 200. Blue was returned to one replica. A rolling update to a second tag pointing to the same image completed at two replicas; rollout history showed revisions, and `rollout undo` restored `task-manager:local`. This verifies rollout mechanics, not a distinct application release.
+The Service readiness endpoint returned HTTP 200 through port forwarding. A generated disposable account and task survived scaling blue to two replicas and restarting the deployment; the verifier reconnected to the Service after the rollout and retrieved the task with HTTP 200. Blue was returned to one replica. The existing `ops/verify-kind.sh` then built a distinct ARM64 image with a visible page title change, loaded it into kind, rolled blue to `task-manager:lab-v2`, and undid the rollout. After rollback, the live Service returned readiness HTTP 200 and the original `Task Manager` page title. Both slots ended healthy at one replica.
 
-A demo observer service account and RoleBinding could read Pods and Pod logs but could not read Secrets. The credential value was not displayed. Terraform's final plan reported no changes.
+![Task Manager board screenshot](task-board.png)
+
+A demo observer service account and RoleBinding could read Pods and Pod logs but could not read Secrets. The credential value was not displayed. Fluentd's collector and agent reached Ready, its 2 GiB archive claim bound, and the archive held Kubernetes system records. After five readiness requests through the application Service, the archive contained 79 blue application container log records. Terraform's final plan reported no changes.
 
 ## Not verified in this environment
 
 No `.git` directory or Git remote existed in the supplied folder. The GitHub CLI was absent and no authorized private repository URL was supplied. Therefore no repository URL, commits, branch merge, conflict resolution, push trigger, Jenkins build, SonarQube gate, Trivy result, or image publication can be claimed.
 
-Helm did not become available after the Homebrew attempt, so Prometheus and Grafana were not installed. Fluentd manifests were not applied and no archive was inspected. Argo CD was not installed or connected to Git; blue/green transitions through Git reconciliation were not performed. Metrics traffic and resource charts were not verified. The provided pipeline and manifests are configuration, not evidence that those services ran.
+Helm did not become available after the Homebrew attempt, so Prometheus and Grafana were not installed and metrics traffic or resource charts were not verified. Argo CD was not installed or connected to Git; blue/green transitions through Git reconciliation were not performed. The provided pipeline and manifests are configuration, not evidence that those services ran.
 
 The host provisioning Ansible play targets Ubuntu x86-64, which is not this Apple Silicon workstation. The workstation deployment play was used instead. This route is recorded and verified; provisioning of a separate Ubuntu host remains unverified. No recording facility was available during this run, so a timed recording script is supplied instead of a video. The PowerPoint export could not be generated because the presentation authoring runtime dependency was unavailable.
 

@@ -1,0 +1,8 @@
+Local-only Git demonstration (no remote configured)
+Baseline: 11abf4f
+Demo record: 365cfce
+Branch demo/conflict-a: ace980b
+Branch demo/conflict-b: 4ca9ccc
+Conflict resolution: 8bbc3ca
+Merge to main: df28597
+Branches are retained locally. No push or public publication occurred.
