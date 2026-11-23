@@ -1,0 +1,10 @@
+prometheus:
+  prometheusSpec:
+    retention: 2d
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: task-manager
+grafana:
+  service:
+    type: ClusterIP

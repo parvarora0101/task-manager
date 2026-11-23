@@ -1,0 +1,36 @@
+---
+- name: Configure and deploy from the workstation
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    root: "{{ playbook_dir }}/../.."
+    lab_cluster: task-lab
+    kube_context: kind-task-lab
+  tasks:
+    - name: Create namespace and metrics credentials
+      ansible.builtin.command: ./ops/bootstrap.sh
+      args:
+        chdir: "{{ root }}"
+      environment:
+        TASK_KUBE_CONTEXT: "{{ kube_context }}"
+      register: bootstrap
+      changed_when: "' created' in bootstrap.stdout"
+    - name: Build current image
+      ansible.builtin.command: docker build -t task-manager:local .
+      args:
+        chdir: "{{ root }}"
+    - name: Load the image into kind
+      ansible.builtin.command: "kind load docker-image task-manager:local --name {{ lab_cluster }}"
+    - name: Apply application configuration
+      ansible.builtin.command: "kubectl --context {{ kube_context }} apply -k k8s"
+      args:
+        chdir: "{{ root }}"
+      register: apply
+      changed_when: "'created' in apply.stdout or 'configured' in apply.stdout"
+    - name: Restart to pick up the loaded lab tag
+      ansible.builtin.command: "kubectl --context {{ kube_context }} -n task-manager rollout restart deployment/task-blue deployment/task-green"
+    - name: Wait for the two slots
+      ansible.builtin.command: "kubectl --context {{ kube_context }} -n task-manager rollout status deployment/task-{{ item }} --timeout=180s"
+      loop: [blue, green]
+      changed_when: false

@@ -1,0 +1,187 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: task-logs
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+  namespace: task-logs
+data:
+  agent.conf: |
+    <source>
+      @type tail
+      path /var/log/containers/*.log
+      exclude_path ["/var/log/containers/*_task-logs_*.log"]
+      pos_file /positions/containers.pos
+      tag kubernetes.*
+      read_from_head false
+      refresh_interval 5
+      <parse>
+        @type regexp
+        expression /^(?<time>\S+) (?<stream>stdout|stderr) (?<flag>\S+) (?<log>.*)$/
+        time_format %Y-%m-%dT%H:%M:%S.%N%z
+      </parse>
+    </source>
+    <match kubernetes.**>
+      @type forward
+      require_ack_response true
+      <server>
+        host collector
+        port 24224
+      </server>
+      <buffer tag>
+        @type file
+        path /positions/buffer
+        flush_interval 5s
+        retry_forever true
+        total_limit_size 256m
+        overflow_action block
+      </buffer>
+    </match>
+  collector.conf: |
+    <source>
+      @type forward
+      port 24224
+      bind 0.0.0.0
+    </source>
+    <match kubernetes.**>
+      @type file
+      path /archive/containers
+      append true
+      <buffer time>
+        @type file
+        path /archive/buffer
+        timekey 60s
+        timekey_wait 15s
+        timekey_use_utc true
+        flush_mode interval
+        flush_interval 10s
+        total_limit_size 256m
+        overflow_action block
+      </buffer>
+      <format>
+        @type out_file
+        output_tag true
+      </format>
+    </match>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collector
+  namespace: task-logs
+spec:
+  selector:
+    app: log-collector
+  ports:
+    - port: 24224
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: archive
+  namespace: task-logs
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector
+  namespace: task-logs
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: log-collector
+  template:
+    metadata:
+      labels:
+        app: log-collector
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: fluentd
+          image: fluentd:v1.18-debian-1
+          args: ["-c", "/settings/collector.conf"]
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          readinessProbe:
+            tcpSocket:
+              port: 24224
+          volumeMounts:
+            - name: config
+              mountPath: /settings
+              readOnly: true
+            - name: archive
+              mountPath: /archive
+      volumes:
+        - name: config
+          configMap:
+            name: fluentd-config
+        - name: archive
+          persistentVolumeClaim:
+            claimName: archive
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: task-logs
+spec:
+  selector:
+    matchLabels:
+      app: log-agent
+  template:
+    metadata:
+      labels:
+        app: log-agent
+    spec:
+      automountServiceAccountToken: false
+      tolerations:
+        - operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: fluentd
+          image: fluentd:v1.18-debian-1
+          args: ["-c", "/settings/agent.conf"]
+          securityContext:
+            runAsUser: 0
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: config
+              mountPath: /settings
+              readOnly: true
+            - name: logs
+              mountPath: /var/log
+              readOnly: true
+            - name: positions
+              mountPath: /positions
+      volumes:
+        - name: config
+          configMap:
+            name: fluentd-config
+        - name: logs
+          hostPath:
+            path: /var/log
+            type: Directory
+        - name: positions
+          hostPath:
+            path: /var/lib/task-fluentd
+            type: DirectoryOrCreate

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+<header><div class="shell masthead"><a href="/">Task Manager</a><button id="logout" class="secondary" hidden>Sign out</button></div></header>
+<main class="shell">
+  <p id="notice" role="status" aria-live="polite"></p>
+  <section id="auth" class="panel auth" hidden>
+    <h1 id="auth-title">Sign in</h1>
+    <form id="credentials">
+      <label>Email <input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+      <label>Password <input name="password" type="password" autocomplete="current-password" minlength="12" maxlength="128" required></label>
+      <button id="auth-submit">Sign in</button>
+    </form>
+    <button id="toggle" class="secondary">Create an account</button>
+  </section>
+  <section id="workspace" hidden>
+    <div class="heading"><div><h1>My tasks</h1><p id="account"></p></div><button id="new">New task</button></div>
+    <div class="board" id="board"></div>
+    <nav class="pages" aria-label="Task pages"><button id="previous" class="secondary">Previous</button><span id="page"></span><button id="next" class="secondary">Next</button></nav>
+  </section>
+</main>
+<dialog id="editor">
+  <form id="task-form">
+    <h2 id="editor-title">New task</h2>
+    <p id="editor-error" role="alert"></p>
+    <label>Title <input name="title" maxlength="120" required></label>
+    <label>Notes <textarea name="notes" maxlength="2000" rows="4"></textarea></label>
+    <div class="fields">
+      <label>Status <select name="status"><option value="todo">To do</option><option value="doing">In progress</option><option value="done">Done</option></select></label>
+      <label>Due date <input name="due" type="date"></label>
+    </div>
+    <div class="actions"><button type="button" class="secondary" id="cancel">Cancel</button><button>Save task</button></div>
+  </form>
+</dialog>
+</body>
+</html>

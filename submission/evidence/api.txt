@@ -1,0 +1,13 @@
+
+> task-manager@1.0.0 test
+> node --test
+
+✔ session and task lifecycle, ownership, persistence and optimistic updates (143.568958ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 196.124208

@@ -1,0 +1,31 @@
+[WARNING]: Could not match supplied host pattern, ignoring: lab
+
+playbook: ops/ansible/site.yml
+
+playbook: ops/ansible/deploy.yml
+
+PLAY [Configure and deploy from the workstation] *******************************
+
+TASK [Create namespace and metrics credentials] ********************************
+[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/opt/homebrew/bin/python3.14', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.20/reference_appendices/interpreter_discovery.html for more information.
+ok: [localhost]
+
+TASK [Build current image] *****************************************************
+changed: [localhost]
+
+TASK [Load the image into kind] ************************************************
+changed: [localhost]
+
+TASK [Apply application configuration] *****************************************
+changed: [localhost]
+
+TASK [Restart to pick up the loaded lab tag] ***********************************
+changed: [localhost]
+
+TASK [Wait for the two slots] **************************************************
+ok: [localhost] => (item=blue)
+ok: [localhost] => (item=green)
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

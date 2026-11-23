@@ -1,0 +1,29 @@
+
+PLAY [Validate the Apple Silicon Docker Desktop workstation] *******************
+
+TASK [Gathering Facts] *********************************************************
+[WARNING]: Host 'localhost' is using the discovered Python interpreter at '/opt/homebrew/bin/python3.14', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.20/reference_appendices/interpreter_discovery.html for more information.
+ok: [localhost]
+
+TASK [Check the host platform] *************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [Check installed tools and the running Docker engine] *********************
+ok: [localhost] => (item=brew --version)
+ok: [localhost] => (item=docker info --format "{{.Architecture}}")
+ok: [localhost] => (item=kind version)
+ok: [localhost] => (item=kubectl version --client)
+ok: [localhost] => (item=terraform version)
+
+PLAY [Configure and deploy from the workstation] *******************************
+
+TASK [Create namespace and metrics credentials] ********************************
+ok: [localhost]
+
+TASK [Build current image] *****************************************************
+changed: [localhost]
+
+TASK [Load the image into kind] ************************************************

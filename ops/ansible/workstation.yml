@@ -1,0 +1,23 @@
+---
+- name: Validate the Apple Silicon Docker Desktop workstation
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  tasks:
+    - name: Check the host platform
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.system == 'Darwin'
+          - ansible_facts.architecture == 'arm64'
+    - name: Check installed tools and the running Docker engine
+      ansible.builtin.command: "{{ item }}"
+      loop:
+        - brew --version
+        - docker info --format "{{ '{{.Architecture}}' }}"
+        - kind version
+        - kubectl version --client
+        - terraform version
+      changed_when: false
+
+- name: Deploy using the validated workstation
+  ansible.builtin.import_playbook: deploy.yml

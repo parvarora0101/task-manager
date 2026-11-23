@@ -1,0 +1,39 @@
+Initializing modules...
+Initializing provider plugins found in the configuration...
+- terraform.io/builtin/terraform is built in to Terraform
+
+Initializing the backend...
+
+Initializing provider plugins found in the state...
+- terraform.io/builtin/terraform is built in to Terraform
+
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+Success! The configuration is valid.
+
+module.cluster.terraform_data.kind: Refreshing state... [id=7f0451cc-bd88-71e3-b427-b9e4e33ba93d]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+module.cluster.terraform_data.kind: Refreshing state... [id=7f0451cc-bd88-71e3-b427-b9e4e33ba93d]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+kubectl_context = "kind-task-lab"

@@ -1,0 +1,4 @@
+NAME                 IMAGE              COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+task-manager-app-1   task-manager-app   "docker-entrypoint.s…"   app       16 seconds ago   Up 15 seconds (healthy)   127.0.0.1:3000->3000/tcp
+task-manager_tasks
+{"ok":true}

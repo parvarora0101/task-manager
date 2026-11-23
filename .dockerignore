@@ -1,0 +1,7 @@
+*
+!server.js
+!package.json
+!public/
+!public/**
+!ops/
+!ops/backup.js

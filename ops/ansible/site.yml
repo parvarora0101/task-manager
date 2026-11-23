@@ -1,0 +1,36 @@
+---
+- name: Prepare an Ubuntu x86_64 lab host
+  hosts: lab
+  become: true
+  vars:
+    kind_version: v0.30.0
+    kubectl_version: v1.34.1
+  tasks:
+    - name: Install Docker and prerequisites
+      ansible.builtin.apt:
+        name: [docker.io, ca-certificates, openssl]
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+    - name: Start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+    - name: Grant the designated lab operator Docker access
+      ansible.builtin.user:
+        name: "{{ lab_operator }}"
+        groups: docker
+        append: true
+    - name: Install kind
+      ansible.builtin.get_url:
+        url: "https://github.com/kubernetes-sigs/kind/releases/download/{{ kind_version }}/kind-linux-amd64"
+        checksum: "sha256:https://github.com/kubernetes-sigs/kind/releases/download/{{ kind_version }}/kind-linux-amd64.sha256sum"
+        dest: /usr/local/bin/kind
+        mode: "0755"
+    - name: Install kubectl
+      ansible.builtin.get_url:
+        url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+        checksum: "sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl.sha256"
+        dest: /usr/local/bin/kubectl
+        mode: "0755"
