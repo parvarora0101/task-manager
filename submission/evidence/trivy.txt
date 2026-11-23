@@ -1,0 +1,5 @@
+Standalone Trivy scan of task-manager:local. Transfer progress omitted.
+2026-11-23T13:19:05+05:30	INFO	[vulndb] Need to update DB
+2026-11-23T13:19:05+05:30	INFO	[vulndb] Downloading vulnerability DB...
+2026-11-23T13:19:05+05:30	INFO	[vulndb] Downloading artifact...	repo="ghcr.io/aquasecurity/trivy-db:2"
+2026-11-23T13:25:41+05:30	FATAL	Fatal error	run error: init error: DB error: failed to download vulnerability DB: OCI artifact error: failed to download vulnerability DB: failed to download artifact from ghcr.io/aquasecurity/trivy-db:2: oci download error: copy error: stream error: stream ID 1; PROTOCOL_ERROR; received from peer
