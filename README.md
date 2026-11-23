@@ -80,3 +80,4 @@ Status values are `todo`, `doing`, `done`. Due dates use `YYYY-MM-DD` or an empt
 ## Deployment scope
 
 The default deployment is a single-node lab installation. Blue and green use the same persistent SQLite database and must stay on one node with a local filesystem. Local volume storage is a single point of failure. An Internet-facing installation needs a TLS reverse proxy with matching `APP_ORIGIN`, controlled registration and a backup policy. Multi-node availability requires migrating to a database designed for networked access, such as PostgreSQL.
+# task-manager
