@@ -20,9 +20,9 @@ flowchart LR
   Blue --> PVC[(task-data PVC · 1 GiB\nBound · shared SQLite)]
   Green --> PVC
 
-  Blue -->|/metrics · bearer token| Prom[Prometheus\nnot installed]
+  Blue -->|/metrics · bearer token| Prom[Prometheus\npending readiness]
   Green -->|/metrics · bearer token| Prom
-  Prom --> Grafana[Grafana\nnot installed]
+  Prom --> Grafana[Grafana\npending readiness]
   Blue -->|container stdout/stderr| Fluentd[Fluentd agent and collector\nverified]
   Green -->|container stdout/stderr| Fluentd
   Fluentd --> Archive[(Persistent log archive\n2 GiB PVC · verified)]
